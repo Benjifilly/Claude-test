@@ -107,40 +107,58 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Menu Toggle Button */
+        /* Updated Menu Toggle Button */
         .menu-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 1001;
-            background: var(--secondary-color);
-            color: var(--text-color);
+            background: transparent;
             border: none;
-            padding: 10px;
-            border-radius: 50%;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 0;
+            transition: all 0.3s ease;
         }
 
-        .menu-toggle:hover {
-            transform: scale(1.1);
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--text-color);
+            transition: all 0.3s ease;
         }
 
-        .menu-toggle.active {
-            transform: rotate(90deg);
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(10px) rotate(45deg);
         }
 
-        /* Navigation */
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-10px) rotate(-45deg);
+        }
+
+        /* Updated Navigation */
         nav {
             position: fixed;
             top: 0;
             right: -300px;
             width: 300px;
             height: 100vh;
-            background: rgba(52, 152, 219, 0.9);
-            padding: 2rem;
+            background: rgba(44, 62, 80, 0.95);
+            padding: 4rem 2rem 2rem;
             transition: right 0.3s ease;
             z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
         }
 
         nav.show {
@@ -149,26 +167,57 @@
 
         nav ul {
             list-style-type: none;
-            padding-top: 50px;
+            padding: 0;
         }
 
         nav ul li {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.3s ease;
         }
+
+        nav.show ul li {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        nav ul li:nth-child(1) { transition-delay: 0.1s; }
+        nav ul li:nth-child(2) { transition-delay: 0.2s; }
+        nav ul li:nth-child(3) { transition-delay: 0.3s; }
+        nav ul li:nth-child(4) { transition-delay: 0.4s; }
 
         nav ul li a {
             color: var(--text-color);
             text-decoration: none;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             transition: all 0.3s ease;
             padding: 0.5rem 1rem;
             border-radius: 20px;
             display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav ul li a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        nav ul li a:hover::before {
+            left: 0;
         }
 
         nav ul li a:hover, nav ul li a.active {
-            background-color: rgba(255,255,255,0.2);
+            color: var(--secondary-color);
         }
 
         .container {
@@ -284,7 +333,11 @@
         <div class="loader"></div>
     </div>
 
-    <button class="menu-toggle">☰</button>
+    <button class="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
     <nav>
         <ul>
@@ -453,53 +506,20 @@ async function getWeatherData(city) {
             menuToggle.addEventListener('click', () => {
                 nav.classList.toggle('show');
                 menuToggle.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
             });
 
             // Close menu when clicking outside
             document.addEventListener('click', (e) => {
-                if (!nav.contains(e.target) && !menuToggle.contains(e.target)) {
+                if (!nav.contains(e.target) && !menuToggle.contains(e.target) && nav.classList.contains('show')) {
                     nav.classList.remove('show');
                     menuToggle.classList.remove('active');
+                    document.body.classList.remove('menu-open');
                 }
             });
 
             // Dynamic text animation
-            const dynamicText = document.querySelector('header p');
-            const phrases = [
-                'Full Stack Developer',
-                'Problem Solver',
-                'Tech Enthusiast',
-                'Lifelong Learner'
-            ];
-            let currentPhraseIndex = 0;
-            let currentCharIndex = 0;
-            let isDeleting = false;
-
-            function typeText() {
-                const currentPhrase = phrases[currentPhraseIndex];
-                
-                if (isDeleting) {
-                    dynamicText.textContent = currentPhrase.substring(0, currentCharIndex - 1);
-                    currentCharIndex--;
-                } else {
-                    dynamicText.textContent = currentPhrase.substring(0, currentCharIndex + 1);
-                    currentCharIndex++;
-                }
-
-                if (!isDeleting && currentCharIndex === currentPhrase.length) {
-                    isDeleting = true;
-                    setTimeout(typeText, 1000);
-                } else if (isDeleting && currentCharIndex === 0) {
-                    isDeleting = false;
-                    currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
-                    setTimeout(typeText, 500);
-                } else {
-                    setTimeout(typeText, isDeleting ? 50 : 100);
-                }
-            }
-
-            typeText();
-        });
-    </script>
+            const dynamicText = document.
+        </script>
 </body>
 </html>
